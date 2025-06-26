@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "18632693175",
+    "project_id": "mealprep-4fc47",
+    "storage_bucket": "mealprep-4fc47.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:18632693175:android:c7ebbc5166637ea0e2c432",
+        "android_client_info": {
+          "package_name": "com.example.mealplan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoeXAsnyHF_Ijzr1NV8ZFo1XHEjiR4_Ns"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
