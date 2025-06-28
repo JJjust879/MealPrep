@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'recipemodel.dart';
 import 'greeting_card.dart';
 import 'recipe_carousel.dart';
+import 'spoonacular_test_page.dart'; // Import the SpoonacularTestPage
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
   final String userName = 'User';
-
 
   final List<RecipeModel> recommendedRecipes = [
     RecipeModel(name: 'Protein Pancakes', time: '15 min', calories: 320),
@@ -128,9 +128,14 @@ class HomePage extends StatelessWidget {
                   ),
                   _NavBarItem(
                     icon: Icons.description, // Changed to paper-like icon
-                    label: 'View Plans',
+                    label: 'Plans',
                     onTap: () {
-                      // TODO: Navigate to View
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SpoonacularTestPage(),
+                        ),
+                      );
                     },
                   ),
                 ],

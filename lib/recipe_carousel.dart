@@ -40,66 +40,75 @@ class RecipeCarousel extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   elevation: 3,
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Placeholder for image
-                        Container(
-                          height: 150,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Icon(
-                            Icons.image,
-                            size: 32,
-                            color: Colors.white70,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        // Removed description, only show name, time, and calories
-                        Text(
-                          recipe.name,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.titleSmall?.copyWith(fontSize: 15),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 6),
-                        Row(
+                  child: Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.access_time, size: 14),
-                            const SizedBox(width: 3),
+                            // Placeholder for image
+                            Container(
+                              height: 150,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(
+                                Icons.image,
+                                size: 32,
+                                color: Colors.white70,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            // Removed description, only show name, time, and calories
                             Text(
-                              recipe.time,
+                              recipe.name,
                               style: Theme.of(
                                 context,
-                              ).textTheme.bodySmall?.copyWith(fontSize: 11),
+                              ).textTheme.titleSmall?.copyWith(fontSize: 15),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(width: 10),
-                            Icon(
-                              Icons.local_fire_department,
-                              size: 14,
-                              color: Colors.redAccent,
+                            const SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Icon(Icons.access_time, size: 14),
+                                const SizedBox(width: 3),
+                                Text(
+                                  recipe.time,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.bodySmall?.copyWith(fontSize: 11),
+                                ),
+                                const SizedBox(width: 10),
+                                Icon(
+                                  Icons.local_fire_department,
+                                  size: 14,
+                                  color: Colors.redAccent,
+                                ),
+                                const SizedBox(width: 3),
+                                Text(
+                                  recipe.calories != null
+                                      ? '${recipe.calories} kcal'
+                                      : '-- kcal',
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.bodySmall?.copyWith(fontSize: 11),
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 3),
-                            Text(
-                              recipe.calories != null
-                                  ? '${recipe.calories} kcal'
-                                  : '-- kcal',
-                              style: Theme.of(
-                                context,
-                              ).textTheme.bodySmall?.copyWith(fontSize: 11),
-                            ),
+                            const Spacer(),
                           ],
                         ),
-                        const Spacer(),
-                      ],
-                    ),
+                      ),
+                      Positioned(
+                        top: 4,
+                        right: 4,
+                        child: _WishlistButton(),
+                      ),
+                    ],
                   ),
                 ),
               );
@@ -107,6 +116,31 @@ class RecipeCarousel extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _WishlistButton extends StatefulWidget {
+  @override
+  State<_WishlistButton> createState() => _WishlistButtonState();
+}
+
+class _WishlistButtonState extends State<_WishlistButton> {
+  bool wishlisted = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(
+        wishlisted ? Icons.favorite : Icons.favorite_border,
+        color: wishlisted ? Colors.red : Colors.grey,
+      ),
+      tooltip: wishlisted ? 'Remove from Wishlist' : 'Add to Wishlist',
+      onPressed: () {
+        setState(() {
+          wishlisted = !wishlisted;
+        });
+      },
     );
   }
 }
