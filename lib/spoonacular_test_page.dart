@@ -192,17 +192,12 @@ class RecipeDetailPage extends StatelessWidget {
                         'Nutrition:',
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
-                      ...List<Widget>.from(
-                        (details['nutrition']['nutrients'] as List)
-                            .take(5)
-                            .map(
-                              (n) => Text(
-                                '${n['name']}: ${n['amount']} ${n['unit']}',
-                              ),
-                            ),
+                      ..._buildNutritionList(
+                        details['nutrition']['nutrients'] as List<dynamic>,
                       ),
                     ],
                   ),
+
                 const SizedBox(height: 16),
                 if (details['extendedIngredients'] != null)
                   Column(
@@ -260,5 +255,27 @@ List<Widget> _parseInstructions(String html) {
           child: Text('${entry.key + 1}. ${entry.value.trim()}'),
         ),
       )
+      .toList();
+}
+
+// Helper to show only the most relevant nutrients
+List<Widget> _buildNutritionList(List<dynamic> nutrients) {
+  const wanted = [
+    'Calories',
+    'Protein',
+    'Carbohydrates',
+    'Fat',
+    'Fiber',
+    'Sugar',
+    'Saturated Fat',
+    'Cholesterol',
+    'Sodium',
+  ];
+  final filtered = nutrients.where((n) => wanted.contains(n['name'])).toList();
+  filtered.sort(
+    (a, b) => wanted.indexOf(a['name']).compareTo(wanted.indexOf(b['name'])),
+  );
+  return filtered
+      .map<Widget>((n) => Text('${n['name']}: ${n['amount']} ${n['unit']}'))
       .toList();
 }
