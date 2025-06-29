@@ -1,25 +1,12 @@
 import 'package:flutter/material.dart';
-import 'recipemodel.dart';
 import 'greeting_card.dart';
-import 'recipe_carousel.dart';
-import 'spoonacular_test_page.dart'; // Import the SpoonacularTestPage
+import 'recipepage.dart';
+import 'shoppinglist.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
   final String userName = 'User';
-
-  final List<RecipeModel> recommendedRecipes = [
-    RecipeModel(name: 'Protein Pancakes', time: '15 min', calories: 320),
-    RecipeModel(name: 'Chicken Stir Fry', time: '20 min', calories: 410),
-    RecipeModel(name: 'Greek Yogurt Parfait', time: '5 min', calories: 180),
-  ];
-
-  final List<RecipeModel> savedRecipes = [
-    RecipeModel(name: 'Egg White Omelette', time: '10 min', calories: 150),
-    RecipeModel(name: 'Tuna Salad', time: '8 min', calories: 220),
-    RecipeModel(name: 'Grilled Tofu Bowl', time: '18 min', calories: 300),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +26,6 @@ class HomePage extends StatelessWidget {
       body: ListView(
         children: [
           GreetingCard(userName: userName),
-          RecipeCarousel(
-            recipes: recommendedRecipes,
-            title: 'Recommended For You',
-            titleStyle: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
           const Padding(
             padding: EdgeInsets.fromLTRB(16, 24, 16, 8),
             child: Text(
@@ -54,38 +33,12 @@ class HomePage extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
-          ...savedRecipes.map(
-            (recipe) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 2,
-                child: ListTile(
-                  title: Text(recipe.name),
-                  subtitle: Row(
-                    children: [
-                      Icon(Icons.access_time, size: 14),
-                      const SizedBox(width: 3),
-                      Text(recipe.time, style: const TextStyle(fontSize: 12)),
-                      const SizedBox(width: 10),
-                      Icon(
-                        Icons.local_fire_department,
-                        size: 14,
-                        color: Colors.redAccent,
-                      ),
-                      const SizedBox(width: 3),
-                      Text(
-                        recipe.calories != null
-                            ? '${recipe.calories} kcal'
-                            : '-- kcal',
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Text(
+              'Add recipes to your meal plan',
+              style: TextStyle(fontSize: 15, color: Colors.grey),
+              textAlign: TextAlign.center,
             ),
           ),
           const SizedBox(height: 80), // For bottom nav bar spacing
@@ -108,14 +61,24 @@ class HomePage extends StatelessWidget {
                     icon: Icons.book,
                     label: 'Recipes',
                     onTap: () {
-                      // TODO: Navigate to Recipes
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RecipePage(),
+                        ),
+                      );
                     },
                   ),
                   _NavBarItem(
                     icon: Icons.shopping_cart,
                     label: 'Grocery List',
                     onTap: () {
-                      // TODO: Navigate to Shopping
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ShoppingListPage(),
+                        ),
+                      );
                     },
                   ),
                   const SizedBox(width: 48), // Space for FAB
@@ -130,12 +93,7 @@ class HomePage extends StatelessWidget {
                     icon: Icons.description, // Changed to paper-like icon
                     label: 'Plans',
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SpoonacularTestPage(),
-                        ),
-                      );
+                      // TODO: Navigate to Plans
                     },
                   ),
                 ],
