@@ -5,6 +5,7 @@ import 'recipepage.dart';
 import 'shoppinglist.dart';
 import 'scheduling.dart';
 import 'MealPlansScreen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -34,6 +35,81 @@ class HomePage extends StatelessWidget {
           body: ListView(
             children: [
               GreetingCard(userName: userName),
+
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 24, 16, 8),
+                child: Text(
+                  'Your Upcoming Meals',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+
+              FutureBuilder<QuerySnapshot>(
+                future: FirebaseFirestore.instance
+                    .collection('Scheduling')
+                    .where('User', isEqualTo: FirebaseFirestore.instance.doc('/user/${user?.id}'))
+                    .orderBy('DateTime')
+                    .limit(3)
+                    .get(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+
+                  if (snapshot.hasError) {
+                    return const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text('Error loading meals'),
+                    );
+                  }
+
+                  final docs = snapshot.data?.docs ?? [];
+
+                  if (docs.isEmpty) {
+                    return const Padding(
+                      padding: EdgeInsets.all(16),
+                      child: Text('No upcoming meals found.'),
+                    );
+                  }
+
+                  return Column(
+                    children: docs.map((doc) {
+                      final data = doc.data() as Map<String, dynamic>;
+                      final mealName = data['Meal'] ?? 'Unknown';
+                      final type = data['Type'] ?? '';
+                      final time = (data['DateTime'] as Timestamp).toDate();
+
+                      return ListTile(
+                        leading: const Icon(Icons.fastfood),
+                        title: Text(mealName),
+                        subtitle: Text('$type • ${time.toLocal()}'),
+                        onTap: () {
+                          final mealId = data['MealId'];
+                          final mealTitle = data['Meal'];
+
+                          if (mealId != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => RecipeDetailPage(
+                                  recipe: {
+                                    'id': int.tryParse(mealId) ?? 0,
+                                    'title': mealTitle,
+                                  },
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+
               const Padding(
                 padding: EdgeInsets.fromLTRB(16, 24, 16, 8),
                 child: Text(
@@ -41,6 +117,7 @@ class HomePage extends StatelessWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Text(
@@ -49,9 +126,11 @@ class HomePage extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
+
               const SizedBox(height: 80),
             ],
           ),
+
           bottomNavigationBar: _buildBottomNavigationBar(context),
           floatingActionButton: null,
           floatingActionButtonLocation: null,
