@@ -60,15 +60,22 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
 
     final time = await showTimePicker(
       context: context,
-      initialTime: selectedDateTime != null
-          ? TimeOfDay.fromDateTime(selectedDateTime!)
-          : const TimeOfDay(hour: 8, minute: 0),
+      initialTime:
+          selectedDateTime != null
+              ? TimeOfDay.fromDateTime(selectedDateTime!)
+              : const TimeOfDay(hour: 8, minute: 0),
     );
 
     if (time == null) return;
 
     setState(() {
-      selectedDateTime = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+      selectedDateTime = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        time.hour,
+        time.minute,
+      );
     });
   }
 
@@ -87,7 +94,9 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
   }
 
   Future<void> _saveMeal() async {
-    if (selectedMealId == null || selectedType == null || selectedDateTime == null) {
+    if (selectedMealId == null ||
+        selectedType == null ||
+        selectedDateTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please complete all fields')),
       );
@@ -133,9 +142,9 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
 
       Navigator.pop(context); // return to previous screen
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $e')));
     } finally {
       setState(() => _loading = false);
     }
@@ -158,6 +167,9 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: _selectMeal,
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.green[700],
+              ),
               child: Text(selectedMealName ?? 'Choose Meal'),
             ),
             const SizedBox(height: 16),
@@ -165,12 +177,13 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: selectedType,
-              items: mealTypes.map((type) {
-                return DropdownMenuItem<String>(
-                  value: type,
-                  child: Text(type),
-                );
-              }).toList(),
+              items:
+                  mealTypes.map((type) {
+                    return DropdownMenuItem<String>(
+                      value: type,
+                      child: Text(type),
+                    );
+                  }).toList(),
               onChanged: (value) => setState(() => selectedType = value),
               hint: const Text('Choose type'),
             ),
@@ -179,6 +192,9 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: _pickDateTime,
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.green[700],
+              ),
               child: Text(
                 selectedDateTime != null
                     ? selectedDateTime.toString()
@@ -187,18 +203,27 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
             ),
             const Spacer(),
             ElevatedButton.icon(
-              icon: _loading
-                  ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-                  : const Icon(Icons.save),
-              label: Text(_loading
-                  ? (isEdit ? 'Updating...' : 'Saving...')
-                  : (isEdit ? 'Update Meal' : 'Save Meal')),
+              icon:
+                  _loading
+                      ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.green,
+                        ),
+                      )
+                      : const Icon(Icons.save),
+              label: Text(
+                _loading
+                    ? (isEdit ? 'Updating...' : 'Saving...')
+                    : (isEdit ? 'Update Meal' : 'Save Meal'),
+              ),
               onPressed: _loading ? null : _saveMeal,
-              style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size.fromHeight(48),
+                foregroundColor: Colors.green[700],
+              ),
             ),
           ],
         ),

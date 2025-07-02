@@ -7,7 +7,6 @@ import 'scheduling.dart';
 import 'MealPlansScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -119,10 +118,13 @@ class HomePage extends StatelessWidget {
               ),
 
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 child: Text(
                   'Add recipes to your meal plan',
-                  style: TextStyle(fontSize: 15, color: Colors.grey),
+                  style: TextStyle(fontSize: 15, color: Colors.grey[600]),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -159,7 +161,9 @@ class HomePage extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const RecipePage()),
+                      MaterialPageRoute(
+                        builder: (context) => const RecipePage(),
+                      ),
                     );
                   },
                 ),
@@ -169,7 +173,9 @@ class HomePage extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const ShoppingListPage()),
+                      MaterialPageRoute(
+                        builder: (context) => const ShoppingListPage(),
+                      ),
                     );
                   },
                 ),
@@ -207,7 +213,7 @@ class HomePage extends StatelessWidget {
           child: Material(
             elevation: 10,
             shape: const CircleBorder(),
-            color: Theme.of(context).colorScheme.primary,
+            color: Colors.green[700],
             child: InkWell(
               customBorder: const CircleBorder(),
               onTap: () {
@@ -216,7 +222,11 @@ class HomePage extends StatelessWidget {
               child: const SizedBox(
                 height: 56,
                 width: 56,
-                child: Icon(Icons.home, color: Colors.white, size: 32),
+                child: Icon(
+                  Icons.home,
+                  color: Colors.white,
+                  size: 32,
+                ), // keep white for icon, matches landing page
               ),
             ),
           ),

@@ -30,13 +30,14 @@ class _MealPlansScreenState extends State<MealPlansScreen> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => SchedulingScreen(
-          editDocId: doc.id,
-          initialMealId: data['MealId'],
-          initialMealName: data['Meal'],
-          initialType: data['Type'],
-          initialDateTime: (data['DateTime'] as Timestamp).toDate(),
-        ),
+        builder:
+            (_) => SchedulingScreen(
+              editDocId: doc.id,
+              initialMealId: data['MealId'],
+              initialMealName: data['Meal'],
+              initialType: data['Type'],
+              initialDateTime: (data['DateTime'] as Timestamp).toDate(),
+            ),
       ),
     );
 
@@ -47,22 +48,23 @@ class _MealPlansScreenState extends State<MealPlansScreen> {
   @override
   Widget build(BuildContext context) {
     if (_userId == null) {
-      return const Scaffold(
-        body: Center(child: Text('User not signed in')),
-      );
+      return const Scaffold(body: Center(child: Text('User not signed in')));
     }
 
     return Scaffold(
       appBar: AppBar(title: const Text('My Meal Plans')),
       body: StreamBuilder<QuerySnapshot>(
-        stream: _firestore
-            .collection('Scheduling')
-            .where('User', isEqualTo: _firestore.doc('/user/$_userId'))
-            .orderBy('DateTime')
-            .snapshots(),
+        stream:
+            _firestore
+                .collection('Scheduling')
+                .where('User', isEqualTo: _firestore.doc('/user/$_userId'))
+                .orderBy('DateTime')
+                .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.green),
+            );
           }
 
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
@@ -77,7 +79,9 @@ class _MealPlansScreenState extends State<MealPlansScreen> {
               final meal = plans[index];
               final data = meal.data() as Map<String, dynamic>;
               final dateTime = (data['DateTime'] as Timestamp).toDate();
-              final formattedDate = DateFormat.yMMMd().add_jm().format(dateTime);
+              final formattedDate = DateFormat.yMMMd().add_jm().format(
+                dateTime,
+              );
 
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

@@ -173,9 +173,15 @@ class _RecipePageState extends State<RecipePage> {
                             ? const SizedBox(
                               width: 20,
                               height: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2),
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.green,
+                              ),
                             )
-                            : const Icon(Icons.search),
+                            : const Icon(
+                              Icons.search,
+                              color: Color.fromARGB(255, 28, 67, 30),
+                            ),
                   ),
                 ),
               ],
@@ -199,7 +205,9 @@ class _RecipePageState extends State<RecipePage> {
               height: 210,
               child:
                   _loadingRandom
-                      ? const Center(child: CircularProgressIndicator())
+                      ? const Center(
+                        child: CircularProgressIndicator(color: Colors.green),
+                      )
                       : _randomRecipes.isEmpty
                       ? const Center(child: Text('No recommendations.'))
                       : ListView.separated(
@@ -242,7 +250,7 @@ class _RecipePageState extends State<RecipePage> {
                                               )
                                               : Container(
                                                 height: 100,
-                                                color: Colors.grey[300],
+                                                color: Colors.green[50],
                                                 child: const Icon(
                                                   Icons.fastfood,
                                                   size: 40,
@@ -284,7 +292,7 @@ class _RecipePageState extends State<RecipePage> {
                                               const Icon(
                                                 Icons.local_fire_department,
                                                 size: 16,
-                                                color: Colors.redAccent,
+                                                color: Colors.orange,
                                               ),
                                               const SizedBox(width: 4),
                                               Text(
@@ -308,7 +316,7 @@ class _RecipePageState extends State<RecipePage> {
             ),
             const SizedBox(height: 24),
             if (_error != null)
-              Text('Error: $_error', style: const TextStyle(color: Colors.red)),
+              Text('Error: $_error', style: TextStyle(color: Colors.green)),
             Expanded(
               child:
                   _recipes.isEmpty
@@ -390,7 +398,9 @@ class RecipeDetailPage extends StatelessWidget {
         future: fetchRecipeDetails(recipe['id']),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.green),
+            );
           }
           if (snapshot.hasError) {
             return Center(child: Text('Error: \\${snapshot.error}'));

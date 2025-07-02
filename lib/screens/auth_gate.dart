@@ -30,7 +30,9 @@ class _AuthGateState extends State<AuthGate> {
                 });
               }
 
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(color: Colors.green),
+              );
             },
             signedOutBuilder: (context, _) {
               return const ClerkAuthentication();
@@ -48,9 +50,10 @@ class _AuthGateState extends State<AuthGate> {
     final docSnapshot = await userDoc.get();
 
     if (!docSnapshot.exists) {
-      final email = user.emailAddresses != null && user.emailAddresses.isNotEmpty
-          ? user.emailAddresses.first.emailAddress
-          : 'no-email@example.com';
+      final email =
+          user.emailAddresses != null && user.emailAddresses.isNotEmpty
+              ? user.emailAddresses.first.emailAddress
+              : 'no-email@example.com';
 
       await userDoc.set({
         'id': user.id,

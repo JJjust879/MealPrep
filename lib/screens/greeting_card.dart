@@ -41,8 +41,8 @@ class GreetingCard extends StatelessWidget {
               value: progress,
               minHeight: 8,
               borderRadius: BorderRadius.circular(8),
-              backgroundColor: Colors.grey[200],
-              color: Theme.of(context).colorScheme.primary,
+              backgroundColor: Colors.green[50],
+              color: Colors.green[700],
             ),
             const SizedBox(height: 8),
             Text(
@@ -61,6 +61,7 @@ class GreetingCard extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
+                    foregroundColor: Colors.green[700],
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -72,6 +73,7 @@ class GreetingCard extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
+                    foregroundColor: Colors.green[700],
                   ),
                 ),
               ],
