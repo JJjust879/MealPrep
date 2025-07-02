@@ -27,7 +27,9 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                 .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.green),
+            );
           }
           if (snapshot.hasError) {
             return Center(child: Text('Error: \\${snapshot.error}'));
@@ -42,7 +44,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
               final item = docs[index];
               return Dismissible(
                 key: Key(item.id),
-                background: Container(color: Colors.red),
+                background: Container(color: Colors.green[100]),
                 onDismissed: (_) async {
                   await item.reference.delete();
                 },
@@ -61,6 +63,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.green[100],
         onPressed: () async {
           final result = await Navigator.push(
             context,
@@ -77,7 +80,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                 });
           }
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Color.fromARGB(255, 28, 122, 34)),
         tooltip: 'Add Item',
       ),
     );
