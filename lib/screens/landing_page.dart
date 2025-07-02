@@ -86,25 +86,6 @@ class LandingPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/auth'); // Same Clerk screen
-                  },
-                  style: OutlinedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                    side: BorderSide(color: Colors.green[700]!),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text(
-                    'I Already Have an Account',
-                    style: TextStyle(fontSize: 16, color: Colors.green[700]),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
