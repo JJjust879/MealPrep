@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'recipe_cache_service.dart';
@@ -431,11 +433,11 @@ class RecipeDetailPage extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 8),
-                  Text('ID: ${details['id'] ?? 'N/A'}'),
+                  Text('ID: \\${details['id'] ?? 'N/A'}'),
                   if (details['readyInMinutes'] != null)
-                    Text('Ready in: ${details['readyInMinutes']} min'),
+                    Text('Ready in: \\${details['readyInMinutes']} min'),
                   if (details['servings'] != null)
-                    Text('Servings: ${details['servings']}'),
+                    Text('Servings: \\${details['servings']}'),
                   const SizedBox(height: 16),
                   if (details['nutrition'] != null &&
                       details['nutrition']['nutrients'] != null)
@@ -451,7 +453,6 @@ class RecipeDetailPage extends StatelessWidget {
                         ),
                       ],
                     ),
-
                   const SizedBox(height: 16),
                   if (details['extendedIngredients'] != null)
                     Column(
@@ -465,6 +466,76 @@ class RecipeDetailPage extends StatelessWidget {
                           (details['extendedIngredients'] as List).map(
                             (i) => Text('- ${i['original']}'),
                           ),
+                        ),
+                        const SizedBox(height: 12),
+                        ClerkAuthBuilder(
+                          signedInBuilder: (context, authState) {
+                            final user = authState.user;
+                            return TextButton(
+                              style: TextButton.styleFrom(
+                                side: const BorderSide(
+                                  color: Colors.green,
+                                  width: 1.5,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                foregroundColor: Colors.green,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10,
+                                  horizontal: 16,
+                                ),
+                              ),
+                              onPressed:
+                                  user == null
+                                      ? null
+                                      : () async {
+                                        final userId = user.id;
+                                        final recipeName =
+                                            details['title'] ?? 'Recipe';
+                                        final List<String> ingredients =
+                                            (details['extendedIngredients']
+                                                    as List)
+                                                .map<String>(
+                                                  (i) =>
+                                                      i['original'].toString(),
+                                                )
+                                                .toList();
+                                        await FirebaseFirestore.instance
+                                            .collection('Shopping')
+                                            .doc(recipeName)
+                                            .set({
+                                              'List': ingredients,
+                                              'userid': FirebaseFirestore
+                                                  .instance
+                                                  .doc('/user/$userId'),
+                                            });
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Added to shopping list!',
+                                              ),
+                                              backgroundColor:
+                                                  Colors.green[700],
+                                            ),
+                                          );
+                                        }
+                                      },
+                              child: const Text(
+                                'Add To Shopping List',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            );
+                          },
+                          signedOutBuilder:
+                              (context, _) => const SizedBox.shrink(),
                         ),
                       ],
                     ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:clerk_flutter/clerk_flutter.dart';
-import 'greeting_card.dart';
+import 'weekly_calendar.dart';
 import 'recipepage.dart';
 import 'shoppinglist.dart';
 import 'scheduling.dart';
@@ -15,7 +15,6 @@ class HomePage extends StatelessWidget {
     return ClerkAuthBuilder(
       signedInBuilder: (context, authState) {
         final user = authState.user;
-        final userName = user?.firstName ?? 'User';
 
         return Scaffold(
           appBar: AppBar(
@@ -33,28 +32,34 @@ class HomePage extends StatelessWidget {
           ),
           body: ListView(
             children: [
-              GreetingCard(userName: userName),
-
+              WeeklyCalendar(userId: user?.id),
               const Padding(
                 padding: EdgeInsets.fromLTRB(16, 24, 16, 8),
                 child: Text(
-                  'Your Upcoming Meals',
+                  'Your Created Meals',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
-
-              FutureBuilder<QuerySnapshot>(
-                future: FirebaseFirestore.instance
-                    .collection('Scheduling')
-                    .where('User', isEqualTo: FirebaseFirestore.instance.doc('/user/${user?.id}'))
-                    .orderBy('DateTime')
-                    .limit(3)
-                    .get(),
+              StreamBuilder<QuerySnapshot>(
+                stream:
+                    FirebaseFirestore.instance
+                        .collection('Scheduling')
+                        .where(
+                          'User',
+                          isEqualTo: FirebaseFirestore.instance.doc(
+                            '/user/${user?.id}',
+                          ),
+                        )
+                        .orderBy('DateTime')
+                        .limit(3)
+                        .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Padding(
                       padding: EdgeInsets.all(16),
-                      child: Center(child: CircularProgressIndicator()),
+                      child: Center(
+                        child: CircularProgressIndicator(color: Colors.green),
+                      ),
                     );
                   }
 
@@ -75,60 +80,41 @@ class HomePage extends StatelessWidget {
                   }
 
                   return Column(
-                    children: docs.map((doc) {
-                      final data = doc.data() as Map<String, dynamic>;
-                      final mealName = data['Meal'] ?? 'Unknown';
-                      final type = data['Type'] ?? '';
-                      final time = (data['DateTime'] as Timestamp).toDate();
+                    children:
+                        docs.map((doc) {
+                          final data = doc.data() as Map<String, dynamic>;
+                          final mealName = data['Meal'] ?? 'Unknown';
+                          final type = data['Type'] ?? '';
+                          final time = (data['DateTime'] as Timestamp).toDate();
 
-                      return ListTile(
-                        leading: const Icon(Icons.fastfood),
-                        title: Text(mealName),
-                        subtitle: Text('$type • ${time.toLocal()}'),
-                        onTap: () {
-                          final mealId = data['MealId'];
-                          final mealTitle = data['Meal'];
+                          return ListTile(
+                            leading: const Icon(Icons.fastfood),
+                            title: Text(mealName),
+                            subtitle: Text('$type • ${time.toLocal()}'),
+                            onTap: () {
+                              final mealId = data['MealId'];
+                              final mealTitle = data['Meal'];
 
-                          if (mealId != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => RecipeDetailPage(
-                                  recipe: {
-                                    'id': int.tryParse(mealId) ?? 0,
-                                    'title': mealTitle,
-                                  },
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      );
-                    }).toList(),
+                              if (mealId != null) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (_) => RecipeDetailPage(
+                                          recipe: {
+                                            'id': int.tryParse(mealId) ?? 0,
+                                            'title': mealTitle,
+                                          },
+                                        ),
+                                  ),
+                                );
+                              }
+                            },
+                          );
+                        }).toList(),
                   );
                 },
               ),
-
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 24, 16, 8),
-                child: Text(
-                  'Your Saved Recipes',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
-                child: Text(
-                  'Add recipes to your meal plan',
-                  style: TextStyle(fontSize: 15, color: Colors.grey[600]),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-
               const SizedBox(height: 80),
             ],
           ),

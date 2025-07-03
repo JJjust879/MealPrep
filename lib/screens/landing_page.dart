@@ -82,7 +82,10 @@ class LandingPage extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushNamed(context, '/auth'); // Clerk screen
                   },
-                  child: Text('Get Started', style: TextStyle(fontSize: 16)),
+                  child: Text(
+                    'Get Started',
+                    style: TextStyle(fontSize: 16, color: Colors.green[700]),
+                  ),
                 ),
               ),
               SizedBox(height: 12),
@@ -118,11 +121,7 @@ class FeatureItem extends StatelessWidget {
             color: Colors.green[700],
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: 24,
-          ),
+          child: Icon(icon, color: Colors.white, size: 24),
         ),
         SizedBox(width: 16),
         Expanded(
@@ -140,10 +139,7 @@ class FeatureItem extends StatelessWidget {
               SizedBox(height: 4),
               Text(
                 description,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
               ),
             ],
           ),

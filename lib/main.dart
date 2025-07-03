@@ -15,7 +15,8 @@ void main() async {
 class MealPlanningApp extends StatelessWidget {
   const MealPlanningApp({super.key});
 
-  final String publishableKey = 'pk_test_bm90YWJsZS1jaGlja2VuLTEwLmNsZXJrLmFjY291bnRzLmRldiQ';
+  final String publishableKey =
+      'pk_test_bm90YWJsZS1jaGlja2VuLTEwLmNsZXJrLmFjY291bnRzLmRldiQ';
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class MealPlanningApp extends StatelessWidget {
         theme: ThemeData(primarySwatch: Colors.green),
         initialRoute: '/landing',
         routes: {
-          '/auth': (context) =>  AuthGate(),
+          '/auth': (context) => AuthGate(),
           '/home': (context) => HomePage(),
           '/landing': (context) => LandingPage(),
         },
