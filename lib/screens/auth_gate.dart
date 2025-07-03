@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// Authentication gate that handles user sign-in/sign-out flow.
 class AuthGate extends StatefulWidget {
   const AuthGate({super.key});
 
@@ -21,7 +22,6 @@ class _AuthGateState extends State<AuthGate> {
             signedInBuilder: (context, authState) {
               final user = authState.user;
 
-              // Only run once to avoid reloading
               if (!_navigated && user != null) {
                 _navigated = true;
                 saveUserToFirestore(user);
@@ -61,9 +61,15 @@ class _AuthGateState extends State<AuthGate> {
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      print('✅ User saved to Firestore.');
+      assert(() {
+        debugPrint('User saved to Firestore.');
+        return true;
+      }());
     } else {
-      print('ℹ User already exists in Firestore.');
+      assert(() {
+        debugPrint('User already exists in Firestore.');
+        return true;
+      }());
     }
   }
 }

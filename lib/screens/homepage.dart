@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:clerk_flutter/clerk_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'weekly_calendar.dart';
 import 'recipepage.dart';
 import 'shoppinglist.dart';
 import 'scheduling.dart';
 import 'MealPlansScreen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// Main home screen displaying the meal planner interface.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -23,7 +24,7 @@ class HomePage extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.logout),
                 onPressed: () async {
-                  await authState.signOut(); // Sign out using Clerk
+                  await authState.signOut();
                   Navigator.pushReplacementNamed(context, '/landing');
                 },
                 tooltip: 'Logout',
@@ -100,7 +101,7 @@ class HomePage extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                     builder:
-                                        (_) => RecipeDetailPage(
+                                        (context) => RecipeDetailPage(
                                           recipe: {
                                             'id': int.tryParse(mealId) ?? 0,
                                             'title': mealTitle,
@@ -120,8 +121,6 @@ class HomePage extends StatelessWidget {
           ),
 
           bottomNavigationBar: _buildBottomNavigationBar(context),
-          floatingActionButton: null,
-          floatingActionButtonLocation: null,
         );
       },
       signedOutBuilder: (context, _) => const ClerkAuthentication(),
@@ -133,8 +132,7 @@ class HomePage extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       children: [
         BottomAppBar(
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 8.0,
+          elevation: 0,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Row(
@@ -173,7 +171,7 @@ class HomePage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SchedulingScreen(),
+                        builder: (context) => const SchedulingScreen(),
                       ),
                     );
                   },
@@ -185,7 +183,7 @@ class HomePage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MealPlansScreen(),
+                        builder: (context) => const MealPlansScreen(),
                       ),
                     );
                   },
@@ -196,24 +194,17 @@ class HomePage extends StatelessWidget {
         ),
         Positioned(
           bottom: 35,
-          child: Material(
-            elevation: 10,
-            shape: const CircleBorder(),
-            color: Colors.green[700],
-            child: InkWell(
-              customBorder: const CircleBorder(),
-              onTap: () {
-                // TODO: Home action
-              },
-              child: const SizedBox(
-                height: 56,
-                width: 56,
-                child: Icon(
-                  Icons.home,
-                  color: Colors.white,
-                  size: 32,
-                ), // keep white for icon, matches landing page
-              ),
+          child: Container(
+            height: 56,
+            width: 56,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.green[700],
+              border: Border.all(color: Colors.green[300]!, width: 2),
+            ),
+            child: GestureDetector(
+              onTap: () {},
+              child: const Icon(Icons.home, color: Colors.white, size: 32),
             ),
           ),
         ),
@@ -236,7 +227,7 @@ class _NavBarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Flexible(
-      child: InkWell(
+      child: GestureDetector(
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 2),

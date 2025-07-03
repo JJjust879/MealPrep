@@ -8,7 +8,6 @@ import 'screens/landing_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
   runApp(const MealPlanningApp());
 }
 
@@ -28,8 +27,8 @@ class MealPlanningApp extends StatelessWidget {
         theme: ThemeData(primarySwatch: Colors.green),
         initialRoute: '/landing',
         routes: {
-          '/auth': (context) => AuthGate(),
-          '/home': (context) => HomePage(),
+          '/auth': (context) => const AuthGate(),
+          '/home': (context) => const HomePage(),
           '/landing': (context) => LandingPage(),
         },
       ),

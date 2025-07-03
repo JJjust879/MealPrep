@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:clerk_flutter/clerk_flutter.dart';
 
+/// Shopping list page that displays user's grocery lists.
 class ShoppingListPage extends StatefulWidget {
   const ShoppingListPage({super.key});
 
@@ -16,7 +17,6 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
   ) async {
     await docRef.update({'List': ingredients});
   }
-  // Remove hardcoded userId, will get from Clerk
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                 );
               }
               if (snapshot.hasError) {
-                return Center(child: Text('Error: \\${snapshot.error}'));
+                return Center(child: Text('Error: ${snapshot.error}'));
               }
               final docs = snapshot.data?.docs ?? [];
               if (docs.isEmpty) {
@@ -68,7 +68,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
                       horizontal: 16,
                       vertical: 10,
                     ),
-                    elevation: 2,
+                    elevation: 0,
                     child: Stack(
                       children: [
                         Padding(
@@ -180,8 +180,10 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
         builder: (context) {
           return FloatingActionButton(
             backgroundColor: Colors.green[700],
+            elevation: 0,
+            highlightElevation: 0,
+            disabledElevation: 0,
             onPressed: () async {
-              // Get the user from the nearest ClerkAuthBuilder
               final authState = ClerkAuth.of(context);
               final user = authState.user;
               if (user == null) {
@@ -194,7 +196,7 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
               }
               final result = await showDialog(
                 context: context,
-                builder: (context) => _EditShoppingListDialog(),
+                builder: (context) => const _EditShoppingListDialog(),
               );
               if (result != null &&
                   result is Map &&
@@ -223,15 +225,11 @@ class _ShoppingListPageState extends State<ShoppingListPage> {
   }
 }
 
-// Dialog for editing/creating a shopping list
 class _EditShoppingListDialog extends StatefulWidget {
+  const _EditShoppingListDialog({this.docRef, this.initialIngredients});
+
   final DocumentReference? docRef;
   final List<String>? initialIngredients;
-  const _EditShoppingListDialog({
-    this.docRef,
-    this.initialIngredients,
-    Key? key,
-  }) : super(key: key);
 
   @override
   State<_EditShoppingListDialog> createState() =>
@@ -252,14 +250,12 @@ class _EditShoppingListDialogState extends State<_EditShoppingListDialog> {
     }
   }
 
-  void _addIngredient(String val) {
-    print('Adding ingredient: $val');
-    if (val.trim().isNotEmpty) {
+  void _addIngredient(String value) {
+    if (value.trim().isNotEmpty) {
       setState(() {
-        ingredients.add(val.trim());
+        ingredients.add(value.trim());
         _controller.clear();
       });
-      print('Current ingredients list: $ingredients');
     }
   }
 
@@ -301,8 +297,8 @@ class _EditShoppingListDialogState extends State<_EditShoppingListDialog> {
                   decoration: const InputDecoration(
                     labelText: 'Add Ingredient',
                   ),
-                  onSubmitted: (val) {
-                    _addIngredient(val);
+                  onSubmitted: (value) {
+                    _addIngredient(value);
                   },
                 ),
               ),
@@ -326,9 +322,8 @@ class _EditShoppingListDialogState extends State<_EditShoppingListDialog> {
             if (widget.docRef != null) {
               try {
                 await widget.docRef!.update({'List': ingredients});
-                print('Successfully updated Firestore');
               } catch (e) {
-                print('Error updating Firestore: $e');
+                debugPrint('Error updating shopping list: $e');
               }
               Navigator.pop(context, ingredients);
             } else {
@@ -352,14 +347,14 @@ class _EditShoppingListDialogState extends State<_EditShoppingListDialog> {
   }
 }
 
-// Ingredient checklist with local state (not persisted)
 class _IngredientCheckbox extends StatefulWidget {
-  final DocumentReference recipeDoc;
-  final String ingredient;
   const _IngredientCheckbox({
     required this.recipeDoc,
     required this.ingredient,
   });
+
+  final DocumentReference recipeDoc;
+  final String ingredient;
 
   @override
   State<_IngredientCheckbox> createState() => _IngredientCheckboxState();
@@ -374,9 +369,9 @@ class _IngredientCheckboxState extends State<_IngredientCheckbox> {
       children: [
         Checkbox(
           value: checked,
-          onChanged: (val) {
+          onChanged: (value) {
             setState(() {
-              checked = val ?? false;
+              checked = value ?? false;
             });
           },
           activeColor: Colors.green,

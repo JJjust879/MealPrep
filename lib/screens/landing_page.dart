@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
+/// Landing page that introduces the app and guides users to sign up/sign in.
 class LandingPage extends StatelessWidget {
+  const LandingPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.only(bottom: 10),
+          padding: const EdgeInsets.only(bottom: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Logo/Icon
               Container(
                 width: 120,
                 height: 120,
@@ -24,7 +26,7 @@ class LandingPage extends StatelessWidget {
                   color: Colors.green[700],
                 ),
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               Text(
                 'Welcome to\nMeal Planner',
                 style: TextStyle(
@@ -34,7 +36,7 @@ class LandingPage extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 'Plan your meals, organize your schedule,\nand eat healthier every day.',
                 style: TextStyle(
@@ -44,15 +46,14 @@ class LandingPage extends StatelessWidget {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 48),
-              // Features list
+              const SizedBox(height: 48),
               Container(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.green[50],
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Column(
+                child: const Column(
                   children: [
                     FeatureItem(
                       icon: Icons.calendar_today,
@@ -74,13 +75,12 @@ class LandingPage extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 48),
-              // Action buttons
+              const SizedBox(height: 48),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/auth'); // Clerk screen
+                    Navigator.pushNamed(context, '/auth');
                   },
                   child: Text(
                     'Get Started',
@@ -88,7 +88,7 @@ class LandingPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
             ],
           ),
         ),
@@ -97,18 +97,18 @@ class LandingPage extends StatelessWidget {
   }
 }
 
-// Feature Item Widget
+/// Widget that displays a feature with an icon, title, and description.
 class FeatureItem extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String description;
-
   const FeatureItem({
-    Key? key,
+    super.key,
     required this.icon,
     required this.title,
     required this.description,
-  }) : super(key: key);
+  });
+
+  final IconData icon;
+  final String title;
+  final String description;
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +123,7 @@ class FeatureItem extends StatelessWidget {
           ),
           child: Icon(icon, color: Colors.white, size: 24),
         ),
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -136,7 +136,7 @@ class FeatureItem extends StatelessWidget {
                   color: Colors.green[700],
                 ),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
                 description,
                 style: TextStyle(fontSize: 14, color: Colors.grey[600]),

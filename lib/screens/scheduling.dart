@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:clerk_flutter/clerk_flutter.dart';
 import 'MealSelectionPage.dart';
 
+/// Screen for scheduling or editing meal plans.
 class SchedulingScreen extends StatefulWidget {
   final String? editDocId;
   final String? initialMealId;
@@ -82,7 +83,7 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
   Future<void> _selectMeal() async {
     final result = await Navigator.push<Map<String, String>>(
       context,
-      MaterialPageRoute(builder: (_) => const MealSelectionPage()),
+      MaterialPageRoute(builder: (context) => const MealSelectionPage()),
     );
 
     if (result != null) {
@@ -107,7 +108,6 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
 
     try {
       if (widget.editDocId != null) {
-        // Update existing doc
         await _firestore.collection('Scheduling').doc(widget.editDocId).update({
           'Meal': selectedMealName,
           'MealId': selectedMealId,
@@ -115,7 +115,6 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
           'DateTime': Timestamp.fromDate(selectedDateTime!),
         });
       } else {
-        // Add new doc
         final authState = ClerkAuth.of(context);
         final userId = authState.user?.id;
 
@@ -140,7 +139,7 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
         ),
       );
 
-      Navigator.pop(context); // return to previous screen
+      Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(
         context,

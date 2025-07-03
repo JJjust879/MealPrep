@@ -15,8 +15,6 @@ class RecipePage extends StatefulWidget {
 }
 
 class _RecipePageState extends State<RecipePage> {
-  // String _dataSource = '';
-
   final TextEditingController _inputController = TextEditingController();
   List<Map<String, dynamic>> _recipes = [];
   List<Map<String, dynamic>> _randomRecipes = [];
@@ -28,10 +26,8 @@ class _RecipePageState extends State<RecipePage> {
   }
 
   Future<void> _initHiveAndLoadCache() async {
-    // Initialize Hive (only once per app)
     final dir = await getApplicationDocumentsDirectory();
     Hive.init(dir.path);
-    // Try to load cached recipes first
     final cached = await RecipeCacheService.loadRandomRecipes();
     if (cached.isNotEmpty) {
       setState(() {
@@ -64,7 +60,6 @@ class _RecipePageState extends State<RecipePage> {
         setState(() {
           _randomRecipes = recipes;
         });
-        // Save to Hive cache
         await RecipeCacheService.saveRandomRecipes(
           List<Map<String, dynamic>>.from(recipes),
         );
@@ -233,7 +228,7 @@ class _RecipePageState extends State<RecipePage> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                 ),
-                                elevation: 3,
+                                elevation: 0,
                                 child: Column(
                                   crossAxisAlignment:
                                       CrossAxisAlignment.stretch,
@@ -329,6 +324,7 @@ class _RecipePageState extends State<RecipePage> {
                           final recipe = _recipes[index];
                           return Card(
                             margin: const EdgeInsets.symmetric(vertical: 8),
+                            elevation: 0,
                             child: ListTile(
                               leading:
                                   recipe['image'] != null
@@ -359,7 +355,7 @@ class _RecipePageState extends State<RecipePage> {
     );
   }
 
-  // Helper to get calories from random recipe (may be in nutrition or null)
+  /// Gets calories from recipe nutrition data.
   String _getCalories(Map<String, dynamic> recipe) {
     if (recipe['nutrition'] != null &&
         recipe['nutrition']['nutrients'] != null) {
@@ -561,7 +557,7 @@ class RecipeDetailPage extends StatelessWidget {
   }
 }
 
-// Helper to parse HTML instructions into a numbered list
+/// Parses HTML instructions into a numbered list.
 List<Widget> _parseInstructions(String html) {
   String cleaned = html
       .replaceAll(RegExp(r'<(\/)?(ol|ul|p)>'), '')
@@ -584,7 +580,7 @@ List<Widget> _parseInstructions(String html) {
       .toList();
 }
 
-// Helper to show only the most relevant nutrients
+/// Builds a list of relevant nutrition information widgets.
 List<Widget> _buildNutritionList(List<dynamic> nutrients) {
   const wanted = [
     'Calories',
